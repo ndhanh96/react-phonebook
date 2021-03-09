@@ -11,7 +11,7 @@ function App() {
       .then((res) => res.json())
       .then((res) => {
         res.map((person) => {
-          setName((oldName) => [
+          return setName((oldName) => [
             ...oldName,
             { id: person.id, name: person.name, number: person.number },
           ]);
@@ -32,18 +32,20 @@ function App() {
             {n.name} {n.number}
           </p>
           {isClicked ? (
-            <FilterMe
-              setAll={setAll}
-              setName={setName}
-              name={name}
-              isClicked={isClicked}
-              setClicked={setClicked}
-              id={n.id}
-            />
+            <>
+              <FilterMe
+                setAll={setAll}
+                setName={setName}
+                name={name}
+                isClicked={isClicked}
+                setClicked={setClicked}
+                id={n.id}
+              />
+              <DeleteEntrie name={name} setName={setName} id={n.id} />
+            </>
           ) : (
             <></>
           )}
-          <DeleteEntrie name={name} setName={setName} id={n.id} />
         </div>
       ))}
       {!isClicked ? <button onClick={showALL}>Show ALL</button> : <></>}
@@ -56,15 +58,14 @@ function DeleteEntrie({ id, setName, name }) {
   async function deleteEntriWithID(id) {
     try {
       const res = await axios.delete(`http://localhost:3001/api/delete/${id}`);
-      console.log(res);
-      setName(name.filter((n) => n.id != id));
+      setName(name.filter((n) => n.id !== id));
+      // console.log(res.data);
     } catch (err) {
       console.log(err);
     }
   }
 
   function handleClick() {
-    console.log(id);
     deleteEntriWithID(id);
   }
 
