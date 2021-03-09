@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 function App() {
   const [name, setName] = useState([]);
@@ -46,7 +46,7 @@ function App() {
         </div>
       ))}
       {!isClicked ? <button onClick={showALL}>Show ALL</button> : <></>}
-      <FormSender />
+      <FormSender setName={setName} />
     </div>
   );
 }
@@ -60,17 +60,25 @@ function FilterMe({ id, name, isClicked, setClicked, setAll, setName }) {
   return <button onClick={handleChange}>Click me</button>;
 }
 
-function FormSender(props) {
+function FormSender({ setName }) {
   const [nameData, setNameData] = useState("");
   const [numberData, setNumberData] = useState("");
 
-  async function postData(url , data) {
+  async function postData(url, data) {
     console.log(url);
     try {
-      const response = await axios.post(url, data); 
-      console.log(response);
+      const response = await axios.post(url, data);
+      console.log(response.data);
+      setName((oldName) => [
+        ...oldName,
+        {
+          id: response.data.id,
+          name: response.data.name,
+          number: response.data.number,
+        },
+      ]);
     } catch (err) {
-      console.log(err); 
+      console.log(err);
     }
   }
 
