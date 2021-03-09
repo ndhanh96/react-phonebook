@@ -43,12 +43,32 @@ function App() {
           ) : (
             <></>
           )}
+          <DeleteEntrie name={name} setName={setName} id={n.id} />
         </div>
       ))}
       {!isClicked ? <button onClick={showALL}>Show ALL</button> : <></>}
       <FormSender setName={setName} />
     </div>
   );
+}
+
+function DeleteEntrie({ id, setName, name }) {
+  async function deleteEntriWithID(id) {
+    try {
+      const res = await axios.delete(`http://localhost:3001/api/delete/${id}`);
+      console.log(res);
+      setName(name.filter((n) => n.id != id));
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function handleClick() {
+    console.log(id);
+    deleteEntriWithID(id);
+  }
+
+  return <button onClick={handleClick}>Delete Me</button>;
 }
 
 function FilterMe({ id, name, isClicked, setClicked, setAll, setName }) {
